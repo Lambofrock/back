@@ -1,8 +1,7 @@
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
-import path from "path";
 
-class ProductManager {
+class productManager {
   constructor(path) {
     this.path = path;
   }
@@ -11,10 +10,10 @@ class ProductManager {
     try {
       if (fs.existsSync(this.path)) {
         const products = await fs.promises.readFile(this.path, "utf-8");
-        return JSON.parse(products);
+        return JSON.parse(users);
       } else return [];
     } catch (error) {
-      throw new Error(error.message);
+      console.log(error);
     }
   }
 
@@ -25,28 +24,25 @@ class ProductManager {
         ...obj,
       };
       const products = await this.getAll();
-      const prodExist = products.find((p) => p.id === product.id);
-      if (prodExist) throw new Error("producto ya existe");
+      const productExist = products.find((p) => p.id === producto.id);
+      if (productExist) throw new Error("el producto ya existe");
       products.push(product);
-      await fs.promises.writeFile(this.path, JSON.stringify(products));
-      return product;
+      await fs.promises.writeFile(this.path, JSON.stringify(users));
     } catch (error) {
-      throw new Error(error);
+      throw new Error(message.error);
     }
   }
 
   async getById(id) {
     try {
       const products = await this.getAll();
-      if (!products.length > 0) throw new Error("lista de productos esta vacia");
+      if (!products.length > 0) throw new Error("lista de productos vacia");
       const product = products.find((product) => product.id === id);
-      if (!product) throw new Error("product not found");
       return product;
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error(message.error);
     }
   }
-
   async update(obj, id) {
     try {
       const products = await this.getAll();
@@ -55,35 +51,29 @@ class ProductManager {
       const newArray = products.filter((prod) => prod.id !== id);
       newArray.push(prod);
       await fs.promises.writeFile(this.path, JSON.stringify(newArray));
-      return prod;
-    } catch (error) {
-      throw new Error(error);
+    } catch (error) {throw new Error(error);}
+  }
+  async delete (id){
+    try {
+     const prod = await this.getById(id); 
+     const products = await this.getAll();
+     const newArray = products.filter((prod) => prod.id !== id);
+     await fs.promises.writeFile(this.path, JSON.stringify(newArray));
+    return prod;
+    } catch (error) {throw new Error(error)
+      
     }
   }
-
-  async delete(id) {
+  async deleteAll (){
     try {
-      const prod = await this.getById(id);
-      const products = await this.getAll();
-      const newArray = products.filter((prod) => prod.id !== id);
-      await fs.promises.writeFile(this.path, JSON.stringify(newArray));
-      return prod;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
-  async deleteAll() {
-    try {
-      const products = await this.getAll();
-      if (!products.length > 0) throw new Error("todos los productos borrados");
+      const product = await this.getAll();
+      if(!products.length >0 ) throw new Error("lista de productos vacia");
       await fs.promises.unlink(this.path);
-    } catch (error) {
-      throw new Error(error);
+
+    } catch (error) {throw new Error(RangeError);
+      
     }
   }
 }
 
-export const prodManager = new ProductManager(
-  path.join(process.cwd(), "src/data/products.json")
-);
+export default productManager;

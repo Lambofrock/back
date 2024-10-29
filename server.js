@@ -1,27 +1,11 @@
-//import http from "node:http";
+//console.log("hola");
 import express from "express";
-import productRouter from "./src/routes/productRouter.js";
-import cartRouter from "./src/routes/cartRouter.js";
-import morgan from 'morgan'
-import path from 'path';
+import productRouter from "./src/routes/productRouter.js"
+const app =express();
 
-//const server = http.createServer((req,res)=>
-//res.end("holanda"))
-//server.listen(8080,()=>console.log("server ok puerto 8080"));
+//app.get("/", (req,res)=>{    res.status(200).send("hola")})
+app.use('/products',productRouter);
 
-
-const app = express();
-
-app.use('/static', express.static(path.join(process.cwd(), "src", "publico")));;
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartRouter);
-
-
-
-
-app.listen(8080, () => console.log("server ok puerto 8080"));
+app.listen(8080, ()=>console.log("server ok  en el puerto 8080"))
 
 

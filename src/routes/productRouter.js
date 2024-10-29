@@ -1,16 +1,15 @@
-//import fs from "fs"
 import { Router } from "express";
-import {prodManager} from '../managers/productManager.js';
+import productManager from "../managers/productManager.js";
 
-
+const prodManager = new productManager("./products.json")
 const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const prods = await prodManager.getAll();
+    const prods= await prodManager.getAll();
     res.status(200).json(prods);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "errorsiwi" });
   }
 });
 
@@ -28,15 +27,16 @@ router.post("/", async (req, res) => {
   try {
     const prod = await prodManager.create(req.body);
     res.status(201).json(prod);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (error) { 
+    res.status(500).json({ message: "aca esta el error"});
   }
 });
+
 
 router.delete("/", async (req, res) => {
   try {
     await prodManager.deleteAll();
-    res.json({ message: "productos eliminados" });
+    res.json({ message: "productos borrados ok" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -46,7 +46,7 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const prodDel = await prodManager.delete(id);
-    res.status(200).json({ message: `product id: ${prodDel.id} deleitado ok xd` });
+    res.status(200).json({ message: `producto id: ${prodDel.id} borrado ok` });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
