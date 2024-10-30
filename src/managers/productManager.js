@@ -1,7 +1,8 @@
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
+import path from "path"
 
-class productManager {
+export default class productManager {
   constructor(path) {
     this.path = path;
   }
@@ -10,7 +11,7 @@ class productManager {
     try {
       if (fs.existsSync(this.path)) {
         const products = await fs.promises.readFile(this.path, "utf-8");
-        return JSON.parse(users);
+        return JSON.parse(products);
       } else return [];
     } catch (error) {
       console.log(error);
@@ -70,10 +71,9 @@ class productManager {
       if(!products.length >0 ) throw new Error("lista de productos vacia");
       await fs.promises.unlink(this.path);
 
-    } catch (error) {throw new Error(RangeError);
+    } catch (error) {throw new Error(RangeError)
       
     }
   }
 }
-
-export default productManager;
+export const prodManager = new productManager( path.join(process.cwd(),"../data/carts.json"));
